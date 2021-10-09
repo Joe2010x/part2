@@ -12,7 +12,8 @@ const App = () => {
   const handleClick =(event) => {
     event.preventDefault();
    // console.log(event.target)
-    setPersons(persons.concat({ name: newName }));
+    persons.find((element)=>element.name ===newName) ===undefined ? setPersons(persons.concat({ name: newName }))
+    : alert(`${newName} is already added to phonebook` )
   }
 
   return (
