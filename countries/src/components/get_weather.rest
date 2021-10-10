@@ -1,0 +1,2 @@
+GET http://api.weatherstack.com/current?access_key=17ab0aa52e02c0eb8f490708f8952f2a&query=api.weatherstack.com/current?access_key=17ab0aa52e02c0eb8f490708f8952f2a&query=Stockholm
+
