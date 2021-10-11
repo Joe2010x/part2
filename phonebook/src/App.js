@@ -4,6 +4,7 @@ import Filter from "./components/Filter.js";
 import PersonForm from "./components/PersonForm.js";
 import Persons from "./components/Persons.js";
 import personService from "./services/persons.js"
+import Notification from "./components/Notification.js"
 
 const App = () => {
 const [persons, setPersons] = useState([]);
@@ -14,10 +15,11 @@ const [persons, setPersons] = useState([]);
         setPersons(initialNotes)
       })
   },[])
-
+ // const [style,setStyle] = useStage("red");
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
+  const [errorMessage, setErrorMessage]=useState([null,{color:'red'}])
 
   const addName = (event) => {
     console.log(event.target.value);
@@ -39,6 +41,10 @@ const [persons, setPersons] = useState([]);
         .create(newPerson)
         .then(createdPerson=>{
           setPersons(persons.concat(createdPerson));
+          setErrorMessage([`Add ${createdPerson.name}`,{color:'green'}])
+          setTimeout(()=>{
+            setErrorMessage([null, {color:'red'}]);
+          },5000)
         })
     } 
     else {
@@ -46,10 +52,6 @@ const [persons, setPersons] = useState([]);
         //ask for alter the phone number
         const result = window.confirm(`${newName} is already added to phonebook, replace the old number with a new one? `)
         if (result) {
-          // console.log(
-          //   "update with id : ",
-          //   persons.find((element) => element.name === newName).id,
-          //   { name: newName, number: newNumber })
           const updateId = persons.find((element) => element.name === newName).id
           personService.update(
             updateId,
@@ -70,7 +72,8 @@ const [persons, setPersons] = useState([]);
   const handleDeleteID = (id) =>{
 
     //window confirm message
-    const result = window.confirm(`Delete ${persons.find(person=>person.id === id).name} ?`)
+    const nameOfDelete = persons.find(person=>person.id === id).name;
+    const result = window.confirm(`Delete ${nameOfDelete} ?`)
     if (result) 
     {personService
       .deleteAnItem(id)
@@ -81,8 +84,22 @@ const [persons, setPersons] = useState([]);
         //const newPersons = {...persons, }
         setPersons(persons.filter((person)=>person.id!==id))
         //console.log("new persons object after delete ",persons)
+         setErrorMessage([
+           `Information of ${nameOfDelete} has been removed from server`,
+           { color: "green" },
+         ]);
+         setTimeout(() => {
+           setErrorMessage([null, { color: 'green' }]);
+         }, 5000);
         }
-        )
+        ).catch(error=> {
+          setErrorMessage([`Information of ${nameOfDelete} has already been removed from server`, { color: "red" }]);
+          setTimeout(()=>{
+            setErrorMessage([null,{color:'red'}])
+          },5000)
+          setPersons(persons.filter((person) => person.id !== id));
+        }
+          )
       }
 
     
@@ -92,7 +109,7 @@ const [persons, setPersons] = useState([]);
     <div>
       <h2>Phonebook</h2>
       {/* <div>debug: {filter}</div> */}
-
+      <Notification message ={errorMessage} />
       <Filter onChange={handleFilter} value={filter} />
 
       <h3>add a new</h3>
