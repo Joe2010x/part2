@@ -42,7 +42,23 @@ const [persons, setPersons] = useState([]);
         })
     } 
     else {
-        alert(`${newName} is already added to phonebook`);
+        //alert(`${newName} is already added to phonebook`);
+        //ask for alter the phone number
+        const result = window.confirm(`${newName} is already added to phonebook, replace the old number with a new one? `)
+        if (result) {
+          // console.log(
+          //   "update with id : ",
+          //   persons.find((element) => element.name === newName).id,
+          //   { name: newName, number: newNumber })
+          const updateId = persons.find((element) => element.name === newName).id
+          personService.update(
+            updateId,
+            { name: newName, number: newNumber }
+          ). then (res=>{
+            //console.log("this is returned after update: ",res);
+            setPersons(persons.map(person=>person.id!==updateId?person:res ))
+          })
+        }
     }
      
   };
