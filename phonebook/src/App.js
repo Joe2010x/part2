@@ -1,17 +1,17 @@
-import axios from "axios";
+//import axios from "axios";
 import React, { useState, useEffect } from "react";
 import Filter from "./components/Filter.js";
 import PersonForm from "./components/PersonForm.js";
 import Persons from "./components/Persons.js";
+import personService from "./services/persons.js"
 
 const App = () => {
-  const baseUrl = "http://localhost:3001/persons";
 const [persons, setPersons] = useState([]);
   useEffect (()=>{
-    axios.get(baseUrl)
-      .then (promise =>{
-        //console.log("returned from promise ",promise.data);
-        setPersons(promise.data);
+    personService
+      .getAll()
+      .then(initialNotes => {
+        setPersons(initialNotes)
       })
   },[])
 
@@ -35,10 +35,10 @@ const [persons, setPersons] = useState([]);
     if (persons.find((element) => element.name === newName) === undefined)
     {
       const newPerson = { name: newName, number: newNumber }
-      setPersons(persons.concat(newPerson))
-      axios.post(baseUrl,newPerson)
-        .then (res=>{
-          console.log("returned from post new person: ",res);
+      personService
+        .create(newPerson)
+        .then(createdPerson=>{
+          setPersons(persons.concat(createdPerson));
         })
     } 
     else {
