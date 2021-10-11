@@ -16,4 +16,9 @@ import axios from 'axios'
       return request.then((response) => response.data);
  }
 
- export default {getAll,create,update}
+ const deleteAnItem =(id) =>{
+      const request = axios.delete(`${baseUrl}/${id}`);
+      return request.then((response) => response.data);
+ }
+
+ export default {getAll,create,update,deleteAnItem}

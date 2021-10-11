@@ -51,6 +51,27 @@ const [persons, setPersons] = useState([]);
     setFilter(event.target.value);
   };
 
+  const handleDeleteID = (id) =>{
+
+    //window confirm message
+    const result = window.confirm(`Delete ${persons.find(person=>person.id === id).name} ?`)
+    if (result) 
+    {personService
+      .deleteAnItem(id)
+      .then(res=>{
+
+        console.log(`${persons.find(person=>person.id===id).name} is deleted!`);
+        //console.log("this is response data ",res)
+        //const newPersons = {...persons, }
+        setPersons(persons.filter((person)=>person.id!==id))
+        //console.log("new persons object after delete ",persons)
+        }
+        )
+      }
+
+    
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -69,7 +90,7 @@ const [persons, setPersons] = useState([]);
       />
 
       <h3>Numbers</h3>
-      <Persons personsCollection={persons} thisFilter={filter} />
+      <Persons personsCollection={persons} thisFilter={filter} deleteId ={(id)=>handleDeleteID(id)}/>
     </div>
   );
 };

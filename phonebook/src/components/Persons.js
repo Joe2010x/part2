@@ -1,6 +1,6 @@
 import React from "react";
 
-const Persons = ({ personsCollection, thisFilter }) => {
+const Persons = ({ personsCollection, thisFilter, deleteId }) => {
   console.log(personsCollection);
   console.log(thisFilter);
   return (
@@ -10,9 +10,11 @@ const Persons = ({ personsCollection, thisFilter }) => {
           person.name.toLowerCase().includes(thisFilter.toLowerCase())
         )
         .map((person) => (
-          <p key={person.id}>
+          <div>
+            {/* <p key={person.id}> */}
             {person.name} {person.number}
-          </p>
+            <button onClick={() => deleteId(person.id)}>delete</button>
+          </div>          
         ))}
     </div>
   );
