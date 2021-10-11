@@ -5,10 +5,10 @@ import PersonForm from "./components/PersonForm.js";
 import Persons from "./components/Persons.js";
 
 const App = () => {
-  
+  const baseUrl = "http://localhost:3001/persons";
 const [persons, setPersons] = useState([]);
   useEffect (()=>{
-    axios.get("http://localhost:3001/persons")
+    axios.get(baseUrl)
       .then (promise =>{
         //console.log("returned from promise ",promise.data);
         setPersons(promise.data);
@@ -32,9 +32,19 @@ const [persons, setPersons] = useState([]);
   const handleClick = (event) => {
     event.preventDefault();
     // console.log(event.target)
-    persons.find((element) => element.name === newName) === undefined
-      ? setPersons(persons.concat({ name: newName, number: newNumber }))
-      : alert(`${newName} is already added to phonebook`);
+    if (persons.find((element) => element.name === newName) === undefined)
+    {
+      const newPerson = { name: newName, number: newNumber }
+      setPersons(persons.concat(newPerson))
+      axios.post(baseUrl,newPerson)
+        .then (res=>{
+          console.log("returned from post new person: ",res);
+        })
+    } 
+    else {
+        alert(`${newName} is already added to phonebook`);
+    }
+     
   };
 
   const handleFilter = (event) => {
